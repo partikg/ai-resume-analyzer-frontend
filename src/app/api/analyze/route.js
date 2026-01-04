@@ -1,5 +1,7 @@
 import pdfParse from "pdf-parse";
 
+export const runtime = "nodejs";
+
 export async function POST(req) {
     try {
         const body = await req.json();
