@@ -7,35 +7,62 @@ export default function Home() {
   const [resume, setResume] = useState(null)
   const [jd, setJd] = useState("")
   const [result, setResult] = useState(null)
-  const [pdfUrl, setPdfUrl] = useState(null);
+  // const [pdfUrl, setPdfUrl] = useState(null);
   const [company, setCompany] = useState("");
   const [jobTitle, setJobTitle] = useState("");
   const [loading, setLoading] = useState(false)
 
+  // const submitHandler = async (e) => {
+  //   e.preventDefault()
+
+  //   setLoading(true)
+
+  //   const formData = new FormData()
+  //   formData.append("resume", resume)
+  //   formData.append("jd", jd)
+  //   formData.append("company", company)
+  //   formData.append("jobTitle", jobTitle)
+
+  //   axios.post('http://localhost:3000/api/resume/upload', formData)
+  //     .then((res) => {
+  //       setResult(res.data)
+  //       setPdfUrl(res.data.pdfUrl);
+  //       setLoading(false)
+  //       console.log(res.data)
+  //     })
+  //     .catch((error) => {
+  //       setLoading(false)
+  //       console.log(error)
+  //     })
+
+
+  // }
+
+  const fileToBase64 = (file) =>
+    new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onload = () => resolve(reader.result.split(",")[1]);
+      reader.onerror = reject;
+      reader.readAsDataURL(file);
+    });
+
   const submitHandler = async (e) => {
-    e.preventDefault()
+    e.preventDefault();
+    setLoading(true);
 
-    setLoading(true)
+    const base64 = await fileToBase64(resume);
 
-    const formData = new FormData()
-    formData.append("resume", resume)
-    formData.append("jd", jd)
-    formData.append("company", company)
-    formData.append("jobTitle", jobTitle)
+    const res = await axios.post("/api/analyze", {
+      resumeBase64: base64,
+      jd,
+      company,
+      jobTitle
+    });
 
-    axios.post('http://localhost:3000/api/resume/upload', formData)
-      .then((res) => {
-        setResult(res.data)
-        setPdfUrl(res.data.pdfUrl);
-        setLoading(false)
-        console.log(res.data)
-      })
-      .catch((error) => {
-        setLoading(false)
-        console.log(error)
-      })
+    setResult(res.data);
+    setLoading(false);
+  };
 
-  }
 
   const getLabel = (score) => {
     if (score >= 75) {
@@ -48,6 +75,7 @@ export default function Home() {
       return "Poor"
     }
   }
+
 
 
   return (
@@ -116,12 +144,12 @@ export default function Home() {
             // left side
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
 
-              <div className="border rounded-lg p-3 bg-white">
+              {/* <div className="border rounded-lg p-3 bg-white">
                 <iframe
                   src={pdfUrl}
                   className="w-full h-[500px] border"
                 />
-              </div>
+              </div> */}
 
               {/* right side */}
               <div className="rounded-lg p-6">
