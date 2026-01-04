@@ -50,18 +50,31 @@ export default function Home() {
     e.preventDefault();
     setLoading(true);
 
-    const base64 = await fileToBase64(resume);
+    try {
+      if (!resume) {
+        alert("Please upload a resume PDF");
+        setLoading(false);
+        return;
+      }
 
-    const res = await axios.post("/api/analyze", {
-      resumeBase64: base64,
-      jd,
-      company,
-      jobTitle
-    });
+      const base64 = await fileToBase64(resume);
 
-    setResult(res.data);
-    setLoading(false);
+      const res = await axios.post("/api/analyze", {
+        resumeBase64: base64,
+        jd,
+        company,
+        jobTitle,
+      });
+
+      setResult(res.data);
+    } catch (err) {
+      console.error(err);
+      alert("Something went wrong. Check console.");
+    } finally {
+      setLoading(false);
+    }
   };
+
 
 
   const getLabel = (score) => {
