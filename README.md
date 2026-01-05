@@ -1,6 +1,6 @@
 -------------------------------------------
 
-Live deployed link (Vercel)
+Live deployed link (Vercel) : 
 ai-resume-analyzer-frontend-1tj4.vercel.app
 
 --------------------------------------------
@@ -29,8 +29,13 @@ http://localhost:3000
 How to use the application
 
 Enter company name
+
 Enter job title
+
 Paste job description or required skills 
+
 Upload resume PDF file
+
 Click on Analyze
+
 Resume preview and analysis results will be displayed
