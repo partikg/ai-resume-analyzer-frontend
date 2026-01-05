@@ -7,7 +7,7 @@ export default function Home() {
   const [resume, setResume] = useState(null)
   const [jd, setJd] = useState("")
   const [result, setResult] = useState(null)
-  // const [pdfUrl, setPdfUrl] = useState(null);
+  const [pdfUrl, setPdfUrl] = useState(null);
   const [company, setCompany] = useState("");
   const [jobTitle, setJobTitle] = useState("");
   const [loading, setLoading] = useState(false)
@@ -67,6 +67,7 @@ export default function Home() {
       });
 
       setResult(res.data);
+      setPdfUrl(res.data.pdfUrl);
     } catch (err) {
       console.error(err);
       alert("Something went wrong. Check console.");
@@ -97,7 +98,11 @@ export default function Home() {
 
         <div className="w-full max-w-4xl border-2">
 
-          <form onSubmit={submitHandler} className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
+          <form
+            onSubmit={submitHandler}
+            method="post"
+            className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4"
+          >
 
             <div className="mb-6">
               <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="companyname">
@@ -144,9 +149,14 @@ export default function Home() {
             </div>
 
             <div className="flex items-center justify-between">
-              <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline" type="submit" disabled={loading}>
-                {loading ? "Analyzing..." : "Analyze"}
+              <button
+                type="submit"
+                className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+              >
+                Analyze
               </button>
+
+
             </div>
           </form>
 
@@ -157,12 +167,14 @@ export default function Home() {
             // left side
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
 
-              {/* <div className="border rounded-lg p-3 bg-white">
+              <div className="border rounded-lg p-3 bg-white">
                 <iframe
                   src={pdfUrl}
+                  title="Resume PDF"
                   className="w-full h-[500px] border"
+                  type="application/pdf"
                 />
-              </div> */}
+              </div>
 
               {/* right side */}
               <div className="rounded-lg p-6">
