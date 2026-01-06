@@ -1,7 +1,7 @@
 -------------------------------------------
 
-Live deployed link (Vercel) : 
-ai-resume-analyzer-frontend-1tj4.vercel.app
+Live deployed link (Vercel):
+https://ai-resume-analyzer-frontend-1tj4.vercel.app
 
 --------------------------------------------
 
