@@ -13,14 +13,14 @@ export async function POST(req) {
             );
         }
 
-        /* ================= PDF PARSE ================= */
+        // pdf parse
         const buffer = Buffer.from(resumeBase64, "base64");
         const data = await pdfParse(buffer);
 
         const resumeText = data.text.toLowerCase();
         const jdText = jd.toLowerCase();
 
-        /* ================= SKILLS ================= */
+        // skills
         const skills = [
             "Python", "Java", "JavaScript", "C++", "C#",
             "Ruby", "Swift", "Go", "PHP", "HTML", "CSS",
@@ -72,7 +72,7 @@ export async function POST(req) {
             "Freshsales": 2
         };
 
-        /* ================= RESUME SKILLS ================= */
+        // resume skills
         const resumeSkillCounts = {};
 
         skills.forEach(skill => {
@@ -82,7 +82,7 @@ export async function POST(req) {
             if (matches) resumeSkillCounts[skill] = matches.length;
         });
 
-        /* ================= JD SKILLS ================= */
+        // jdskills
         const jdSkillCounts = {};
 
         skills.forEach(skill => {
@@ -92,7 +92,7 @@ export async function POST(req) {
             if (matches) jdSkillCounts[skill] = matches.length;
         });
 
-        /* ================= MATCH & MISSING ================= */
+        // match and missing skills
         const matchedSkills = {};
         const missingSkills = {};
 
@@ -104,7 +104,7 @@ export async function POST(req) {
             }
         });
 
-        /* ================= ATS SCORE ================= */
+        // ats score = matchedweight/totaljdweight * 100
         let matchedWeight = 0;
         let totalJDWeight = 0;
 
@@ -119,7 +119,7 @@ export async function POST(req) {
             ? Math.round((matchedWeight / totalJDWeight) * 100)
             : 0;
 
-        /* ================= SKILLS SCORE ================= */
+        // skillsScore
         const totalJDSkills = Object.keys(jdSkillCounts).length;
         const matchedSkillCount = Object.keys(matchedSkills).length;
 
@@ -127,7 +127,7 @@ export async function POST(req) {
             ? Math.round((matchedSkillCount / totalJDSkills) * 100)
             : 0;
 
-        /* ================= CONTENT SCORE ================= */
+        // contentscore
         const words = resumeText.split(/\s+/).length;
         const wordScore = words > 500 ? 40 : words > 200 ? 30 : 15;
 
@@ -140,7 +140,7 @@ export async function POST(req) {
 
         const contentScore = Math.min(wordScore + bulletScore + actionScore, 100);
 
-        /* ================= STRUCTURE SCORE ================= */
+        // structure score
         const sections = ["education", "experience", "skills", "projects", "certifications"];
         let structureScore = 0;
 
@@ -153,7 +153,7 @@ export async function POST(req) {
 
         structureScore = Math.min(structureScore, 100);
 
-        /* ================= TONE SCORE ================= */
+        // toneScore
         let toneScore = 100;
 
         ["was responsible for", "worked on", "helped with"].forEach(p => {
@@ -166,7 +166,7 @@ export async function POST(req) {
 
         toneScore = Math.max(toneScore, 50);
 
-        /* ================= OVERALL SCORE ================= */
+        // overallScore
         const overallScore = Math.round(
             atsScore * 0.4 +
             skillsScore * 0.25 +
@@ -175,7 +175,7 @@ export async function POST(req) {
             toneScore * 0.05
         );
 
-        /* ================= IMPROVEMENTS ================= */
+        // need improvements
         const improvements = [];
 
         Object.keys(missingSkills).forEach(skill => {
@@ -201,7 +201,7 @@ export async function POST(req) {
             improvements.push("Tailor resume more closely to the job description");
         }
 
-        /* ================= RESPONSE ================= */
+        // response
         return new Response(
             JSON.stringify({
                 pdfUrl: `data:application/pdf;base64,${resumeBase64}`,
